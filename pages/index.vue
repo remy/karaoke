@@ -1,5 +1,8 @@
 <template>
   <div class="root">
+    <button v-on:click="fullscreen" class="zoom">
+      <img src="/zoom.svg">
+    </button>
     <div v-if="playing">
       <img :src="images[index]" class="big">
       <Progress :ttl="ttl" :key="index" v-on:done="nextImage"></Progress>
@@ -7,7 +10,7 @@
     <div class="gameover instructions" v-else-if="gameover">
       <p class="tada animated infinite delay-2s">GAME OVER!</p>
 
-      <button v-on:click="start">
+      <button class="button" v-on:click="start">
         Start again
         <span v-if="index === 0">{{loaded}}/{{total}}</span>
       </button>
@@ -21,7 +24,7 @@
         <input type="number" min="2" v-model="ttl"> seconds per slide to present your random story.
       </p>
       <p>Good luck…</p>
-      <button v-on:click="start">
+      <button class="button" v-on:click="start">
         Start now
         <span v-if="index === 0">{{loaded}}/{{total}}</span>
       </button>
@@ -63,6 +66,20 @@ p:last-of-type {
   margin-bottom: 48px;
 }
 
+.zoom {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  opacity: 0.6;
+}
+
+.zoom:hover {
+  opacity: 1;
+}
+
 .root {
   background: #222;
   color: #efefef;
@@ -70,7 +87,11 @@ p:last-of-type {
   line-height: 56px;
 }
 
-button {
+:fullscreen .zoom {
+  display: none;
+}
+
+.button {
   font-size: 48px;
   padding: 32px;
   border: 0;
@@ -93,6 +114,18 @@ img.big {
 <script>
 import Progress from "../components/Progress";
 
+console.log("🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️");
+
+console.log(
+  "%cSource image collection: https://unsplash.com/collections/1816930/images-for-slide-karaoke",
+  "font-weight: bold; "
+);
+console.log(
+  "%cSource code: https://github.com/remy/karaoke",
+  "font-weight: bold"
+);
+console.log("🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️");
+
 function getImage() {
   const url =
     "https://source.unsplash.com/collection/1816930/800x600?" + Math.random();
@@ -113,6 +146,11 @@ export default {
     };
   },
   methods: {
+    fullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      }
+    },
     nextImage() {
       this.index++;
       if (this.index === this.images.length) {
