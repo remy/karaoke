@@ -94,7 +94,8 @@ img.big {
 import Progress from "../components/Progress";
 
 function getImage() {
-  const url = "https://source.unsplash.com/800x600?funny&" + Math.random();
+  const url =
+    "https://source.unsplash.com/collection/1816930/800x600?" + Math.random();
   return fetch(url).then(res => res.url);
 }
 
