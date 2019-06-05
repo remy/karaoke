@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "alias": "karaoke.isthe.link",
   "routes": [
     {
       "methods": ["GET"],
