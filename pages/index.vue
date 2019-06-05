@@ -4,6 +4,7 @@
       <img src="/zoom.svg">
     </button>
     <div v-if="playing">
+      <span class="status">{{ index + 1}}/{{ total }}</span>
       <img :src="images[index]" class="big">
       <Progress :ttl="ttl" :key="index" v-on:done="nextImage"></Progress>
     </div>
@@ -34,6 +35,12 @@
 
 
 <style scoped>
+.status {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  opacity: 0.5;
+}
 .instructions {
   display: flex;
   flex-direction: column;
@@ -139,7 +146,7 @@ export default {
       playing: false,
       gameover: false,
       index: -1,
-      ttl: 10,
+      ttl: 20,
       loaded: 0,
       total: 5,
       images: []
