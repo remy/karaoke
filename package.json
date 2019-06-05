@@ -1,0 +1,20 @@
+{
+  "name": "vue-slide-karaoke",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nuxt",
+    "now-build": "nuxt generate",
+    "now-dev": "nuxt",
+    "build": "nuxt generate",
+    "deploy": "npm run build && now --target production"
+  },
+  "keywords": [],
+  "author": "Remy Sharp (https://remysharp.com)",
+  "license": "MIT",
+  "dependencies": {
+    "emoji-rain": "^1.4.0",
+    "nuxt": "^2.8.1"
+  }
+}

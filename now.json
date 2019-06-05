@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "methods": ["GET"],
+      "src": "^/",
+      "dest": "/dist/index.html"
+    },
+    {
+      "methods": ["GET"],
+      "src": "^/(.*)",
+      "dest": "/dist/$1"
+    }
+  ],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ]
+}

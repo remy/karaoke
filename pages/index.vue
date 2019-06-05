@@ -1,0 +1,155 @@
+<template>
+  <div class="root">
+    <div v-if="playing">
+      <img :src="images[index]" class="big">
+      <Progress :ttl="ttl" :key="index" v-on:done="nextImage"></Progress>
+    </div>
+    <div class="gameover instructions" v-else-if="gameover">
+      <p class="tada animated infinite delay-2s">GAME OVER!</p>
+
+      <button v-on:click="start">
+        Start again
+        <span v-if="index === 0">{{loaded}}/{{total}}</span>
+      </button>
+    </div>
+    <div class="instructions" v-else>
+      <p>This is slide show karaoke.</p>
+      <p>
+        You have
+        <input type="number" min="2" v-model="total">
+        randomly selected images and
+        <input type="number" min="2" v-model="ttl"> seconds per slide to present your random story.
+      </p>
+      <p>Good luck…</p>
+      <button v-on:click="start">
+        Start now
+        <span v-if="index === 0">{{loaded}}/{{total}}</span>
+      </button>
+    </div>
+  </div>
+</template>
+
+
+<style scoped>
+.instructions {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 0 48px;
+}
+
+.instructions input[type="number"] {
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  background: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  border: none;
+  color: inherit;
+  width: 100px;
+}
+
+.instructions input[type="number"]:hover {
+  background: black;
+}
+
+p {
+  margin: 24px 0;
+}
+
+p:last-of-type {
+  margin-bottom: 48px;
+}
+
+.root {
+  background: #222;
+  color: #efefef;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+button {
+  font-size: 48px;
+  padding: 32px;
+  border: 0;
+  background: rgb(244, 67, 54);
+  border-radius: 8px;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+img.big {
+  max-width: 100%;
+  object-fit: contain;
+  height: 100vh;
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
+
+<script>
+import Progress from "../components/Progress";
+
+function getImage() {
+  const url = "https://source.unsplash.com/800x600?funny&" + Math.random();
+  return fetch(url).then(res => res.url);
+}
+
+export default {
+  components: { Progress },
+  data() {
+    return {
+      playing: false,
+      gameover: false,
+      index: -1,
+      ttl: 10,
+      loaded: 0,
+      total: 5,
+      images: []
+    };
+  },
+  methods: {
+    nextImage() {
+      this.index++;
+      if (this.index === this.images.length) {
+        this.gameover = true;
+        this.playing = false;
+      }
+    },
+    async start() {
+      this.loaded = 0;
+      this.index = 0;
+      // populate the this.images
+      this.images = await Promise.all(
+        Array.from({ length: this.total }, () =>
+          getImage().then(url => {
+            this.loaded++;
+            return url;
+          })
+        )
+      );
+
+      // quickly check and replace if there's any dupes
+      const dupes = [];
+      this.images.forEach((_, i) => {
+        if (this.images.lastIndexOf(_) !== i) {
+          dupes.push(i);
+        }
+      });
+
+      if (dupes.length) {
+        await Promise.all(
+          dupes.map(i => {
+            return getImage().then(url => (this.images[i] = url));
+          })
+        );
+      }
+
+      this.playing = true;
+    }
+  }
+};
+</script>

@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+body,
+input,
+button {
+  font-size: 16px;
+  line-height: 28px;
+  font-family: 'Rubik', sans-serif;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+pre,
+code {
+  font-family: 'Ubuntu mono', 'SFMono-Regular', Consolas, 'Liberation Mono',
+    Menlo, Courier, monospace;
+}
+
+body,
+html,
+#__nuxt,
+#__layout,
+#__layout > div {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
