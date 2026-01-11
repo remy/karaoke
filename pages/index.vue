@@ -1,11 +1,11 @@
 <template>
   <div class="root">
     <button v-on:click="fullscreen" class="zoom">
-      <img src="/zoom.svg">
+      <img src="/zoom.svg" />
     </button>
     <div v-if="playing">
-      <span class="status">{{ index + 1}}/{{ total }}</span>
-      <img :src="images[index]" class="big">
+      <span class="status">{{ index + 1 }}/{{ total }}</span>
+      <img :src="images[index]" class="big" />
       <Progress :ttl="ttl" :key="index" v-on:done="nextImage"></Progress>
     </div>
     <div class="gameover instructions" v-else-if="gameover">
@@ -13,26 +13,26 @@
 
       <button class="button" v-on:click="start">
         Start again
-        <span v-if="index === 0">{{loaded}}/{{total}}</span>
+        <span v-if="index === 0">{{ loaded }}/{{ total }}</span>
       </button>
     </div>
     <div class="instructions" v-else>
       <p>This is slide show karaoke.</p>
       <p>
         You have
-        <input type="number" min="2" v-model="total">
+        <input type="number" min="2" v-model="total" />
         randomly selected images and
-        <input type="number" min="2" v-model="ttl"> seconds per slide to present your random story.
+        <input type="number" min="2" v-model="ttl" /> seconds per slide to
+        present your random story.
       </p>
       <p>Good luck…</p>
       <button class="button" v-on:click="start">
         Start now
-        <span v-if="index === 0">{{loaded}}/{{total}}</span>
+        <span v-if="index === 0">{{ loaded }}/{{ total }}</span>
       </button>
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .status {
@@ -50,7 +50,7 @@
   margin: 0 48px;
 }
 
-.instructions input[type="number"] {
+.instructions input[type='number'] {
   border-radius: 4px;
   font-family: inherit;
   font-size: inherit;
@@ -61,7 +61,7 @@
   width: 100px;
 }
 
-.instructions input[type="number"]:hover {
+.instructions input[type='number']:hover {
   background: black;
 }
 
@@ -117,26 +117,33 @@ img.big {
 }
 </style>
 
-
 <script>
-import Progress from "../components/Progress";
+import Progress from '../components/Progress';
 
-console.log("🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️");
+console.log('🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️');
 
 console.log(
-  "%cSource image collection: https://unsplash.com/collections/1816930/images-for-slide-karaoke",
-  "font-weight: bold; "
+  '%cSource image collection: https://unsplash.com/collections/1816930/images-for-slide-karaoke',
+  'font-weight: bold; '
 );
 console.log(
-  "%cSource code: https://github.com/remy/karaoke",
-  "font-weight: bold"
+  '%cSource code: https://github.com/remy/karaoke',
+  'font-weight: bold'
 );
-console.log("🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️");
+console.log('🎉⭐️🎉⭐️🎉⭐️🎉⭐️🎉⭐️');
 
 function getImage() {
-  const url =
-    "https://source.unsplash.com/collection/1816930/800x600?" + Math.random();
-  return fetch(url).then(res => res.url);
+  const accessKey =
+    '16a858065e350acd52b8f598cb9cec6056c566f7f6852c6cfb530bb76d297e0d';
+  const url = `https://api.unsplash.com/photos/random?collections=1816930&orientation=landscape&w=800&h=600&client_id=${accessKey}`;
+  return fetch(url)
+    .then((res) => {
+      if (!res.ok) throw new Error('Failed to fetch image from Unsplash API');
+      return res.json();
+    })
+    .then((data) =>
+      data.urls && data.urls.regular ? data.urls.regular : data.urls.full
+    );
 }
 
 export default {
@@ -149,7 +156,7 @@ export default {
       ttl: 20,
       loaded: 0,
       total: 5,
-      images: []
+      images: [],
     };
   },
   methods: {
@@ -171,7 +178,7 @@ export default {
       // populate the this.images
       this.images = await Promise.all(
         Array.from({ length: this.total }, () =>
-          getImage().then(url => {
+          getImage().then((url) => {
             this.loaded++;
             return url;
           })
@@ -188,14 +195,14 @@ export default {
 
       if (dupes.length) {
         await Promise.all(
-          dupes.map(i => {
-            return getImage().then(url => (this.images[i] = url));
+          dupes.map((i) => {
+            return getImage().then((url) => (this.images[i] = url));
           })
         );
       }
 
       this.playing = true;
-    }
-  }
+    },
+  },
 };
 </script>
